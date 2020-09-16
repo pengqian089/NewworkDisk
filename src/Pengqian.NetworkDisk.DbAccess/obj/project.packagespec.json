@@ -1,0 +1,56 @@
+﻿{
+  "version": "1.0.0",
+  "restore": {
+    "projectUniqueName": "H:\\project\\NetworkDisk\\src\\Pengqian.NetworkDisk.DbAccess\\Pengqian.NetworkDisk.DbAccess.csproj",
+    "projectName": "Pengqian.NetworkDisk.DbAccess",
+    "projectPath": "H:\\project\\NetworkDisk\\src\\Pengqian.NetworkDisk.DbAccess\\Pengqian.NetworkDisk.DbAccess.csproj",
+    "outputPath": "H:\\project\\NetworkDisk\\src\\Pengqian.NetworkDisk.DbAccess\\obj\\",
+    "projectStyle": "PackageReference",
+    "originalTargetFrameworks": [
+      "netcoreapp3.1"
+    ],
+    "sources": {
+      "https://www.nuget.org/api/v2/": {}
+    },
+    "frameworks": {
+      "netcoreapp3.1": {
+        "projectReferences": {
+          "H:\\project\\NetworkDisk\\src\\Pengqian.NetworkDisk.Infrastructure\\Pengqian.NetworkDisk.Infrastructure.csproj": {
+            "projectPath": "H:\\project\\NetworkDisk\\src\\Pengqian.NetworkDisk.Infrastructure\\Pengqian.NetworkDisk.Infrastructure.csproj"
+          }
+        }
+      }
+    },
+    "warningProperties": {
+      "warnAsError": [
+        "NU1605"
+      ]
+    }
+  },
+  "frameworks": {
+    "netcoreapp3.1": {
+      "dependencies": {
+        "MongoDB.Driver": {
+          "target": "Package",
+          "version": "[2.11.2, )"
+        }
+      },
+      "imports": [
+        "net461",
+        "net462",
+        "net47",
+        "net471",
+        "net472",
+        "net48"
+      ],
+      "assetTargetFallback": true,
+      "warn": true,
+      "frameworkReferences": {
+        "Microsoft.NETCore.App": {
+          "privateAssets": "all"
+        }
+      },
+      "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
+    }
+  }
+}
