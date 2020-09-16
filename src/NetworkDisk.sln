@@ -1,43 +1,61 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pengqian.NetworkDisk.Web", "Pengqian.NetworkDisk.Web\Pengqian.NetworkDisk.Web.csproj", "{6EA4832D-C9B0-41B5-A81F-3E469CA3679B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pengqian.NetworkDisk.Web", "Pengqian.NetworkDisk.Web\Pengqian.NetworkDisk.Web.csproj", "{6EA4832D-C9B0-41B5-A81F-3E469CA3679B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pengqian.NetworkDisk.DbAccess", "Pengqian.NetworkDisk.DbAccess\Pengqian.NetworkDisk.DbAccess.csproj", "{AD4F9522-E6D0-4B70-8B40-F208B3F51F63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pengqian.NetworkDisk.DbAccess", "Pengqian.NetworkDisk.DbAccess\Pengqian.NetworkDisk.DbAccess.csproj", "{AD4F9522-E6D0-4B70-8B40-F208B3F51F63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pengqian.NetworkDisk.Infrastructure", "Pengqian.NetworkDisk.Infrastructure\Pengqian.NetworkDisk.Infrastructure.csproj", "{2200B296-9876-4462-82E6-46E9EF799C88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pengqian.NetworkDisk.Infrastructure", "Pengqian.NetworkDisk.Infrastructure\Pengqian.NetworkDisk.Infrastructure.csproj", "{2200B296-9876-4462-82E6-46E9EF799C88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pengqian.NetworkDisk.Public.Entity", "Pengqian.NetworkDisk.Public.Entity\Pengqian.NetworkDisk.Public.Entity.csproj", "{E0A66255-01C1-4B1D-80C4-D089C36442E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pengqian.NetworkDisk.Public.Entity", "Pengqian.NetworkDisk.Public.Entity\Pengqian.NetworkDisk.Public.Entity.csproj", "{E0A66255-01C1-4B1D-80C4-D089C36442E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pengqian.NetworkDisk.Public.ViewModel", "Pengqian.NetworkDisk.Public.ViewModel\Pengqian.NetworkDisk.Public.ViewModel.csproj", "{AEC4112D-0322-46A2-96E2-7EBA07BDE569}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pengqian.NetworkDisk.Public.ViewModel", "Pengqian.NetworkDisk.Public.ViewModel\Pengqian.NetworkDisk.Public.ViewModel.csproj", "{AEC4112D-0322-46A2-96E2-7EBA07BDE569}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pengqian.NetworkDisk.Service", "Pengqian.NetworkDisk.Service\Pengqian.NetworkDisk.Service.csproj", "{7046317C-35C9-4EF9-A4FB-C964193E70F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pengqian.NetworkDisk.Service", "Pengqian.NetworkDisk.Service\Pengqian.NetworkDisk.Service.csproj", "{7046317C-35C9-4EF9-A4FB-C964193E70F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pengqian.NetworkDisk.UnitTest", "Pengqian.NetworkDisk.UnitTest\Pengqian.NetworkDisk.UnitTest.csproj", "{741550C0-0674-4344-B0C3-3884E13734E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pengqian.NetworkDisk.UnitTest", "Pengqian.NetworkDisk.UnitTest\Pengqian.NetworkDisk.UnitTest.csproj", "{741550C0-0674-4344-B0C3-3884E13734E0}"
 EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6EA4832D-C9B0-41B5-A81F-3E469CA3679B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EA4832D-C9B0-41B5-A81F-3E469CA3679B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EA4832D-C9B0-41B5-A81F-3E469CA3679B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EA4832D-C9B0-41B5-A81F-3E469CA3679B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD4F9522-E6D0-4B70-8B40-F208B3F51F63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD4F9522-E6D0-4B70-8B40-F208B3F51F63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD4F9522-E6D0-4B70-8B40-F208B3F51F63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD4F9522-E6D0-4B70-8B40-F208B3F51F63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2200B296-9876-4462-82E6-46E9EF799C88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2200B296-9876-4462-82E6-46E9EF799C88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2200B296-9876-4462-82E6-46E9EF799C88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2200B296-9876-4462-82E6-46E9EF799C88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0A66255-01C1-4B1D-80C4-D089C36442E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0A66255-01C1-4B1D-80C4-D089C36442E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0A66255-01C1-4B1D-80C4-D089C36442E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0A66255-01C1-4B1D-80C4-D089C36442E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEC4112D-0322-46A2-96E2-7EBA07BDE569}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEC4112D-0322-46A2-96E2-7EBA07BDE569}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEC4112D-0322-46A2-96E2-7EBA07BDE569}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEC4112D-0322-46A2-96E2-7EBA07BDE569}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7046317C-35C9-4EF9-A4FB-C964193E70F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7046317C-35C9-4EF9-A4FB-C964193E70F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7046317C-35C9-4EF9-A4FB-C964193E70F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7046317C-35C9-4EF9-A4FB-C964193E70F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{741550C0-0674-4344-B0C3-3884E13734E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{741550C0-0674-4344-B0C3-3884E13734E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{741550C0-0674-4344-B0C3-3884E13734E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{741550C0-0674-4344-B0C3-3884E13734E0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		|Any CPU = |Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AD4F9522-E6D0-4B70-8B40-F208B3F51F63}.|Any CPU.ActiveCfg = Debug|Any CPU
-		{AD4F9522-E6D0-4B70-8B40-F208B3F51F63}.|Any CPU.Build.0 = Debug|Any CPU
-		{2200B296-9876-4462-82E6-46E9EF799C88}.|Any CPU.ActiveCfg = Debug|Any CPU
-		{2200B296-9876-4462-82E6-46E9EF799C88}.|Any CPU.Build.0 = Debug|Any CPU
-		{E0A66255-01C1-4B1D-80C4-D089C36442E9}.|Any CPU.ActiveCfg = Debug|Any CPU
-		{E0A66255-01C1-4B1D-80C4-D089C36442E9}.|Any CPU.Build.0 = Debug|Any CPU
-		{AEC4112D-0322-46A2-96E2-7EBA07BDE569}.|Any CPU.ActiveCfg = Debug|Any CPU
-		{AEC4112D-0322-46A2-96E2-7EBA07BDE569}.|Any CPU.Build.0 = Debug|Any CPU
-		{7046317C-35C9-4EF9-A4FB-C964193E70F1}.|Any CPU.ActiveCfg = Debug|Any CPU
-		{7046317C-35C9-4EF9-A4FB-C964193E70F1}.|Any CPU.Build.0 = Debug|Any CPU
-		{741550C0-0674-4344-B0C3-3884E13734E0}.|Any CPU.ActiveCfg = Debug|Any CPU
-		{741550C0-0674-4344-B0C3-3884E13734E0}.|Any CPU.Build.0 = Debug|Any CPU
-		{6EA4832D-C9B0-41B5-A81F-3E469CA3679B}.|Any CPU.ActiveCfg = Debug|Any CPU
-		{6EA4832D-C9B0-41B5-A81F-3E469CA3679B}.|Any CPU.Build.0 = Debug|Any CPU
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {880CB467-EDBD-4E32-9696-8E80D192D5FB}
 	EndGlobalSection
 EndGlobal
