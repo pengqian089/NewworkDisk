@@ -4,4 +4,15 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Pengqian.NetworkDisk.DbAccess\Pengqian.NetworkDisk.DbAccess.csproj" />
+      <ProjectReference Include="..\Pengqian.NetworkDisk.Infrastructure\Pengqian.NetworkDisk.Infrastructure.csproj" />
+      <ProjectReference Include="..\Pengqian.NetworkDisk.Public.Entity\Pengqian.NetworkDisk.Public.Entity.csproj" />
+      <ProjectReference Include="..\Pengqian.NetworkDisk.Public.ViewModel\Pengqian.NetworkDisk.Public.ViewModel.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="10.0.0" />
+    </ItemGroup>
+
 </Project>

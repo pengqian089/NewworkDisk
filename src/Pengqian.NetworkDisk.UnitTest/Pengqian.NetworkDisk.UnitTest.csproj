@@ -4,4 +4,15 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+      <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
+      <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Pengqian.NetworkDisk.Public.ViewModel\Pengqian.NetworkDisk.Public.ViewModel.csproj" />
+      <ProjectReference Include="..\Pengqian.NetworkDisk.Service\Pengqian.NetworkDisk.Service.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -29,4 +29,12 @@ namespace Pengqian.NetworkDisk.Infrastructure
         /// </summary>
         public string Db { get; set; } = "NetworkDisk";
     }
+
+    public static class DbTools
+    {
+        /// <summary>
+        /// 默认Db配置
+        /// </summary>
+        public static readonly DbOption DefaultOption = new DbOption();
+    }
 }

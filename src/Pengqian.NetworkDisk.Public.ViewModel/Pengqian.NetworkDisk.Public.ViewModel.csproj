@@ -4,4 +4,9 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Pengqian.NetworkDisk.Infrastructure\Pengqian.NetworkDisk.Infrastructure.csproj" />
+      <ProjectReference Include="..\Pengqian.NetworkDisk.Public.Entity\Pengqian.NetworkDisk.Public.Entity.csproj" />
+    </ItemGroup>
+
 </Project>

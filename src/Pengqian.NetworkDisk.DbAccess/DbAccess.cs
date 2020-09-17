@@ -16,15 +16,25 @@ namespace Pengqian.NetworkDisk.DbAccess
         
         protected DbAccess(DbOption option)
         {
+            if (string.IsNullOrEmpty(option.Db))
+            {
+                throw new ArgumentException("Value cannot be empty.",nameof(option.Db));
+            }
+            if (string.IsNullOrEmpty(option.Host))
+            {
+                throw new ArgumentException("Value cannot be empty.",nameof(option.Host));
+            }
             _dataBaseName = option.Db;
-            //DbOption = option;
-            MongoIdentity identity = new MongoExternalIdentity(option.Db, option.ConnUser);
-            MongoIdentityEvidence identityEvidence = new PasswordEvidence(option.Password);
             var setting = new MongoClientSettings
             {
-                Server = new MongoServerAddress(option.Host, option.Port),
-                Credential = new MongoCredential("SCRAM-SHA-1", identity, identityEvidence)
+                Server = new MongoServerAddress(option.Host, option.Port)
             };
+            if (!string.IsNullOrEmpty(option.ConnUser) && !string.IsNullOrEmpty(option.Password))
+            {
+                MongoIdentity identity = new MongoExternalIdentity(option.Db, option.ConnUser);
+                MongoIdentityEvidence identityEvidence = new PasswordEvidence(option.Password);
+                setting.Credential = new MongoCredential("SCRAM-SHA-1", identity, identityEvidence);
+            }
             _client = new MongoClient(setting);
             _collectionName = typeof(T).Name;
         }
