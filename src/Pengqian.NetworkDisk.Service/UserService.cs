@@ -32,5 +32,13 @@ namespace Pengqian.NetworkDisk.Service
             var user = await Repository.Collection.Find(filter).SingleOrDefaultAsync();
             return Mapper.Map<VmUserInfo>(user.GetUserInfo());
         }
+        
+        public async Task<VmUserInfo> Login(string account, string pwd)
+        {
+            var filter = Builders<User>.Filter.And(Builders<User>.Filter.Eq(x => x.Id, account),
+                Builders<User>.Filter.Eq(x => x.Password, (account + pwd).GenerateMd5()));
+            var user = await Repository.Collection.Find(filter).SingleOrDefaultAsync();
+            return Mapper.Map<VmUserInfo>(user?.GetUserInfo());
+        }
     }
 }
