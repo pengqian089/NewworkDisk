@@ -43,7 +43,7 @@ export default {
   methods:{
     testClick:function(){
       //debugger;
-      this.router.push('login');
+      this.$router.push('login');
     }
   }
 }

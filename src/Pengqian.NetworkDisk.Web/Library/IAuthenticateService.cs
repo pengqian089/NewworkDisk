@@ -12,7 +12,7 @@ namespace Pengqian.NetworkDisk.Web.Library
 {
     public interface IAuthenticateService
     {
-        Task<string> IsAuthenticated(string account, string pwd);
+        Task<object> IsAuthenticated(string account, string pwd);
     }
 
     public class TokenAuthenticationService : IAuthenticateService
@@ -26,19 +26,21 @@ namespace Pengqian.NetworkDisk.Web.Library
             _tokenManagement = tokenManagement.Value;
         }
 
-        public async Task<string> IsAuthenticated(string account, string pwd)
+        public async Task<object> IsAuthenticated(string account, string pwd)
         {
             var userInfo = await _accountService.IsValid(account, pwd);
-            if (userInfo == null) return "";
-
-            var s = userInfo.GetType().GetProperties().Select(x => x.Name).ToList();
+            if (userInfo == null) return null;
+            
             var claims = userInfo.GetType().GetProperties()
                 .Select(x => new Claim(x.Name, x.GetValue(userInfo)?.ToString() ?? "")).ToList();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenManagement.Secret));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var expires = DateTime.Now.AddMinutes(_tokenManagement.AccessExpiration);
             var jwtToken = new JwtSecurityToken(_tokenManagement.Issuer, _tokenManagement.Audience, claims,
-                expires: DateTime.Now.AddMinutes(_tokenManagement.AccessExpiration), signingCredentials: credentials);
-            return new JwtSecurityTokenHandler().WriteToken(jwtToken);
+                expires: expires, signingCredentials: credentials);
+            var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+            return new {expires, token, account = userInfo.Id};
         }
     }
 }

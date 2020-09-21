@@ -18,7 +18,7 @@ namespace Pengqian.NetworkDisk.UnitTest
         {
             var user = new VmUser
             {
-                Id = "pengqian1",
+                Id = "pengqian",
                 Name = "彭迁",
                 Password = "123456",
                 Permissions = Permissions.System,
