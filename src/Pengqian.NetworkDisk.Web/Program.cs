@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +21,11 @@ namespace Pengqian.NetworkDisk.Web
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseKestrel((context, option) =>
+                    {
+                        option.AddServerHeader = false;
+                        option.ConfigureHttpsDefaults(x => x.SslProtocols = SslProtocols.Tls12);
+                    }).UseStartup<Startup>();
                 });
     }
 }

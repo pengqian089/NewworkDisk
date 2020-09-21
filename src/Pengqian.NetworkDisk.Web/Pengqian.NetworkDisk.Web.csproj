@@ -5,7 +5,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="NetworkDiskApp" />
       <Folder Include="obj\Debug\netcoreapp3.1" />
+      <Folder Include="wwwroot" />
     </ItemGroup>
 
     <ItemGroup>
@@ -22,6 +24,16 @@
 
     <ItemGroup>
       <Content Remove="obj\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Pengqian.NetworkDisk.Infrastructure\Pengqian.NetworkDisk.Infrastructure.csproj" />
+      <ProjectReference Include="..\Pengqian.NetworkDisk.Public.ViewModel\Pengqian.NetworkDisk.Public.ViewModel.csproj" />
+      <ProjectReference Include="..\Pengqian.NetworkDisk.Service\Pengqian.NetworkDisk.Service.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
     </ItemGroup>
 
 

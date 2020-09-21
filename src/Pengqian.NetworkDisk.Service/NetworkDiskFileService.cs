@@ -102,12 +102,16 @@ namespace Pengqian.NetworkDisk.Service
             var list = await Repository.SearchFor(x => 
                     x.Owner.Id == userInfo.Id)
                 .ToListAsync();
-            list = list.Where(x => virtualPath.StartWith(x.Path)).ToList();
+            list = list.Where(x => x.Path.StartWith(virtualPath)).ToList();
             var storagePath = Path.Combine(
                 _rootPath, 
                 userInfo.Id,
                 string.Join(Path.DirectorySeparatorChar, virtualPath));
             var dirInfo = new DirectoryInfo(storagePath);
+            if (!dirInfo.Exists)
+            {
+                return;
+            }
             if (dirInfo.Attributes.HasFlag(FileAttributes.Directory))
             {
                 dirInfo.Delete(true);
@@ -121,7 +125,8 @@ namespace Pengqian.NetworkDisk.Service
                 }
                 fileInfo.Delete();
             }
-            await Repository.DeleteAsync(x => list.Select(y => y.Id).Contains(x.Id));
+            var ids = list.Select(y => y.Id).ToArray();
+            await Repository.DeleteAsync(x => ids.Contains(x.Id));
         }
 
         /// <summary>

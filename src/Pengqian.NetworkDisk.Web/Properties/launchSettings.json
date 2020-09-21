@@ -20,7 +20,7 @@
     "Pengqian.NetworkDisk.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "index.html",
       "applicationUrl": "https://localhost:19527;http://localhost:29527",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

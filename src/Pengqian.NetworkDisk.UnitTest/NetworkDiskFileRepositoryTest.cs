@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -93,7 +94,7 @@ namespace Pengqian.NetworkDisk.UnitTest
             Assert.IsFalse(intResult4);
         }
 
-        private async Task UploadFile(string fileName,string[] path,VmUserInfo userInfo)
+        private async Task UploadFile(string fileName, string[] path, VmUserInfo userInfo)
         {
             var request = new RestRequest("https://core.dpangzi.com/Home/Image/5f6422ff7f661701789a29ed");
             var response = await _client.ExecuteGetAsync(request);
@@ -113,7 +114,7 @@ namespace Pengqian.NetworkDisk.UnitTest
             };
             await _service.Upload(viewModel, stream);
         }
-        
+
         [TestMethod]
         public async Task DeleteFileTest()
         {
@@ -125,18 +126,18 @@ namespace Pengqian.NetworkDisk.UnitTest
             var path = new[] {"第一级目录"};
             await UploadFile(fileName, path, userInfo);
             var list = await _service.SearchMyFile(fileName, userInfo);
-            
+
             Assert.IsTrue(list.Count > 0);
             Console.WriteLine(list.Count);
-            
+
             await _service.Delete(path, fileName, userInfo);
-            
+
             var list2 = await _service.SearchMyFile(fileName, userInfo);
             Assert.IsTrue(list2.Count < list.Count);
             Console.WriteLine(list2.Count);
         }
-        
-        private async Task UploadDirFiles(string fileName,string[] path,VmUserInfo userInfo)
+
+        private async Task<string[]> UploadDirFiles(string name, string rootPath, VmUserInfo userInfo)
         {
             var request = new RestRequest("https://core.dpangzi.com/Home/Image/5ee2f09558eec0118018b004");
             var response = await _client.ExecuteGetAsync(request);
@@ -145,34 +146,62 @@ namespace Pengqian.NetworkDisk.UnitTest
             var md5Value = BitConverter.ToString(md5.ComputeHash(buffer)).Replace("-", "").ToLower();
             await using var stream = new MemoryStream(buffer);
 
-            var dir = new[]
+
+            var dir = Enumerable.Range(0, 8).Select(x => rootPath + (x == 0 ? "" : x.ToString())).ToArray();
+            var random = new Random();
+
+            for (var i = 0; i < 50; i++)
             {
-                new []{""},
-                new []{""},
-                new []{""},
-                new []{""},
-                new []{""},
-                new []{""},
-                new []{""}
-            };
-            
-            
-            var viewModel = new VmNetworkDiskFile
-            {
-                FileName = fileName,
-                FileSize = stream.Length,
-                Md5 = md5Value,
-                Owner = userInfo,
-                Path = path,
-                UploadTime = DateTime.Now
-            };
-            await _service.Upload(viewModel, stream);
+                stream.Position = 0;
+                var index = random.Next(1, dir.Length + 1);
+                var path = new List<string>();
+                var fileName = $"{name}{i}.jpg";
+                for (var j = 0; j < index; j++)
+                {
+                    path.Add(dir[j]);
+                }
+
+                var viewModel = new VmNetworkDiskFile
+                {
+                    FileName = fileName,
+                    FileSize = stream.Length,
+                    Md5 = md5Value,
+                    Owner = userInfo,
+                    Path = path.ToArray(),
+                    UploadTime = DateTime.Now
+                };
+                await _service.Upload(viewModel, stream);
+            }
+
+            return dir;
         }
 
         [TestMethod]
         public async Task DeleteDirTest()
         {
-            
+            var userService = new UserService();
+            var userInfo = await userService.GetUserInfo("pengqian");
+            Assert.IsNotNull(userInfo);
+
+            const string name = "dir-test-file-";
+            const string rootPath = "test-dir";
+
+            //模拟批量上传文件 并断言上传是否成功
+            var dir = await UploadDirFiles(name, rootPath, userInfo);
+            var list = await _service.SearchMyFile(name, userInfo);
+            Console.WriteLine(list.Count);
+            Assert.IsTrue(list.Count > 0);
+
+
+            //删除目录，并且删除目录下的文件和DB记录
+            await _service.Delete(dir, userInfo);
+            var list2 = await _service.SearchMyFile(name, userInfo);
+            Console.WriteLine("delete last dir:" + list2.Count);
+            await _service.Delete(new[] {rootPath}, userInfo);
+            var list3 = await _service.SearchMyFile(name, userInfo);
+
+            Console.WriteLine(list3.Count);
+            Assert.IsTrue(list3.Count < list.Count);
         }
     }
 }
