@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using Pengqian.NetworkDisk.Infrastructure;
@@ -60,13 +61,12 @@ namespace Pengqian.NetworkDisk.Service
             var dbFileInfo = await GetNetworkDiskFile(ndFile.FileName, ndFile.Path, ndFile.Owner.Id);
             if (dbFileInfo == null)
             {
-                await Repository.InsertAsync(ndFile);    
+                await Repository.InsertAsync(ndFile);
             }
             else
             {
                 await Repository.UpdateAsync(dbFileInfo);
             }
-            
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Pengqian.NetworkDisk.Service
         /// <param name="fileName"></param>
         /// <param name="userInfo"></param>
         /// <returns></returns>
-        public async Task Delete(string[] virtualPath, string fileName,VmUserInfo userInfo)
+        public async Task Delete(string[] virtualPath, string fileName, VmUserInfo userInfo)
         {
             var dbFile = await GetNetworkDiskFile(fileName, virtualPath, userInfo.Id);
             if (dbFile != null)
@@ -87,6 +87,7 @@ namespace Pengqian.NetworkDisk.Service
                 {
                     File.Delete(filePath);
                 }
+
                 await Repository.DeleteAsync(x => x.Id == dbFile.Id);
             }
         }
@@ -99,12 +100,12 @@ namespace Pengqian.NetworkDisk.Service
         /// <returns></returns>
         public async Task Delete(string[] virtualPath, VmUserInfo userInfo)
         {
-            var list = await Repository.SearchFor(x => 
+            var list = await Repository.SearchFor(x =>
                     x.Owner.Id == userInfo.Id)
                 .ToListAsync();
             list = list.Where(x => x.Path.StartWith(virtualPath)).ToList();
             var storagePath = Path.Combine(
-                _rootPath, 
+                _rootPath,
                 userInfo.Id,
                 string.Join(Path.DirectorySeparatorChar, virtualPath));
             var dirInfo = new DirectoryInfo(storagePath);
@@ -112,6 +113,7 @@ namespace Pengqian.NetworkDisk.Service
             {
                 return;
             }
+
             if (dirInfo.Attributes.HasFlag(FileAttributes.Directory))
             {
                 dirInfo.Delete(true);
@@ -123,8 +125,10 @@ namespace Pengqian.NetworkDisk.Service
                 {
                     throw new Exception("path error.");
                 }
+
                 fileInfo.Delete();
             }
+
             var ids = list.Select(y => y.Id).ToArray();
             await Repository.DeleteAsync(x => ids.Contains(x.Id));
         }
@@ -154,10 +158,73 @@ namespace Pengqian.NetworkDisk.Service
         private async Task<NetworkDiskFile> GetNetworkDiskFile(string fileName, string[] path, string account)
         {
             var list = await Repository.SearchFor(x =>
-                x.FileName == fileName && 
+                x.FileName == fileName &&
                 x.Owner.Id == account).ToListAsync();
             var dbFile = list.SingleOrDefault(x => x.Path.SequenceEqual(path));
             return dbFile;
+        }
+
+        /// <summary>
+        /// 对文件重命名
+        /// </summary>
+        /// <param name="virtualPath"></param>
+        /// <param name="fileName"></param>
+        /// <param name="userInfo"></param>
+        /// <param name="newName"></param>
+        /// <returns></returns>
+        public async Task Rename(string[] virtualPath, string fileName, VmUserInfo userInfo, string newName)
+        {
+            var dbFile = await GetNetworkDiskFile(fileName, virtualPath, userInfo.Id);
+            if (dbFile != null)
+            {
+                var filePath = Path.Combine(_rootPath, dbFile.Owner.Id,
+                    string.Join(Path.DirectorySeparatorChar, dbFile.Path), fileName);
+                var fileInfo = new FileInfo(filePath);
+                if (fileInfo.Exists)
+                {
+                    var newFile = Path.Combine(_rootPath, dbFile.Owner.Id,
+                        string.Join(Path.DirectorySeparatorChar, dbFile.Path), newName);
+                    fileInfo.MoveTo(newFile);
+
+                    var update = Builders<NetworkDiskFile>.Update.Set(x => x.FileName, newName);
+                    //await Repository.DeleteAsync(x => x.Id == dbFile.Id);
+                    await Repository.UpdateAsync(x => x.Id == dbFile.Id, update);
+                }
+            }
+        }
+
+        public async Task RenameFolder(string[] virtualPath, VmUserInfo userInfo, string newName)
+        {
+            var list = await Repository.SearchFor(x =>
+                    x.Owner.Id == userInfo.Id)
+                .ToListAsync();
+            list = list.Where(x => x.Path.StartWith(virtualPath)).ToList();
+            var storagePath = Path.Combine(
+                _rootPath,
+                userInfo.Id,
+                string.Join(Path.DirectorySeparatorChar, virtualPath));
+            var dirInfo = new DirectoryInfo(storagePath);
+            if (!dirInfo.Exists)
+            {
+                return;
+            }
+
+            virtualPath[^1] = newName;
+            var newPath = Path.Combine(
+                _rootPath,
+                userInfo.Id,
+                string.Join(Path.DirectorySeparatorChar, virtualPath));
+            dirInfo.MoveTo(newPath);
+
+            list.ForEach(x => x.Path[virtualPath.Length - 1] = newName);
+
+            //var writes = new List<WriteModel<NetworkDiskFile>>();
+            //Expression<Func<NetworkDiskFile, bool>> express = x => x.Id == 
+            var writes = list.Select(x =>
+                new UpdateManyModel<NetworkDiskFile>(new ExpressionFilterDefinition<NetworkDiskFile>(y => y.Id == x.Id),
+                    Builders<NetworkDiskFile>.Update.Set(y => y.Path, x.Path))).ToList();
+            await Repository.Collection.BulkWriteAsync(writes);
+            //await Repository.UpdateAsync()
         }
     }
 }

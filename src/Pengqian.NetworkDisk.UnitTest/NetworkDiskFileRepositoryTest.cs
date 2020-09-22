@@ -137,6 +137,38 @@ namespace Pengqian.NetworkDisk.UnitTest
             Console.WriteLine(list2.Count);
         }
 
+        [TestMethod]
+        public async Task RenameTest()
+        {
+            var userService = new UserService();
+            var userInfo = await userService.GetUserInfo("pengqian");
+            Assert.IsNotNull(userInfo);
+
+            const string fileName = "test-999.jpg";
+            var path = new[] {"第一级目录"};
+            await UploadFile(fileName, path, userInfo);
+            var list = await _service.SearchMyFile(fileName, userInfo);
+
+            Assert.IsTrue(list.Count > 0);
+            Console.WriteLine(list.Count);
+            
+            await _service.Rename(path, fileName, userInfo,"test-997.jpg");
+            var list2 = await _service.SearchMyFile(fileName, userInfo);
+            Assert.IsTrue(list2.Count < list.Count);
+            Console.WriteLine(list2.Count);
+        }
+
+        [TestMethod]
+        public async Task RenameFolderTest()
+        {
+            var userService = new UserService();
+            var userInfo = await userService.GetUserInfo("pengqian");
+            Assert.IsNotNull(userInfo);
+            
+            var path = new[] {"第一层"};
+            await _service.RenameFolder(path, userInfo,"the first level");
+        }
+
         private async Task<string[]> UploadDirFiles(string name, string rootPath, VmUserInfo userInfo)
         {
             var request = new RestRequest("https://core.dpangzi.com/Home/Image/5ee2f09558eec0118018b004");

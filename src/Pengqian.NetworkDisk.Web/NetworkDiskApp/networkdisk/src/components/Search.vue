@@ -4,49 +4,14 @@
       <div class="box-header">
         <div class="details-container">
           <div class="desc">
-            <a href="javascript:;" style="margin-right: 10px" v-on:click="createDir">新建文件夹</a>
-            <a href="javascript:;" style="margin-right: 10px" v-on:click="upload">上传文件</a>
-            <input type="text" id="txtSearch" v-model="searchText" /> <a href="javascript:;" v-on:click="search">搜索</a>
-          </div>
-          <div class="desc">
-            {{ currentPath.join("/") }}
+            <a href="javascript:;" style="margin-right: 10px" v-on:click="goBack">返回</a>
+            <input type="text" id="txtSearch" v-model="searchText"/> <a href="javascript:;" v-on:click="search">搜索</a>
           </div>
         </div>
       </div>
 
       <div class="box-rows">
-        <div class="row prev" v-if="!isRoot">
-          <div class="header">
-            <a href="javascript:;" v-on:click="goToPrev(prevUrl)"><span style="min-width: 16px">上一页</span></a>
-          </div>
-        </div>
-
-        <div class="row" v-for="dir in directories" v-bind:todo="dir" v-bind:key="dir.name">
-          <div class="icon">
-            <svg height="16" class="git-dir" color="blue-3" aria-label="Directory" viewBox="0 0 16 16" width="16"
-                 role="img">
-              <path
-                  d="M1.75 1A1.75 1.75 0 000 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0016 13.25v-8.5A1.75 1.75 0 0014.25 3h-6.5a.25.25 0 01-.2-.1l-.9-1.2c-.33-.44-.85-.7-1.4-.7h-3.5z"></path>
-            </svg>
-          </div>
-          <div class="header">
-            <span>
-                <a href="javascript:;" v-on:click="openDir(dir.name)" :title="dir.name">{{ dir.name }}</a>
-            </span>
-          </div>
-          <div class="desc">
-            <span>
-                
-            </span>
-          </div>
-          <div class="time">
-            <a href="javascript:;" v-on:click="delDir(dir.name)" style="margin-right: 8px">删除</a>
-            <a href="javascript:;" v-on:click="renameDir(dir.name)">重命名</a>
-          </div>
-        </div>
-
-
-        <div class="row" v-for="file in files" v-bind:todo="file" v-bind:key="file.name">
+        <div class="row" v-for="file in files" v-bind:todo="file" v-bind:key="file.id">
           <div class="icon">
             <svg height="16" class="git-file" color="gray-light" aria-label="File" viewBox="0 0 16 16" width="16"
                  role="img">
@@ -56,21 +21,21 @@
           </div>
           <div class="header">
             <span>
-                <a href="javascript:;" :title="file.name">{{ file.name }}</a>
+                <a href="javascript:;" :title="file.fileName">{{ file.fileName }}</a>
             </span>
           </div>
           <div class="desc">
             <span>
-                
+                <a :title="file.path.join('/')">{{ file.path.join('/') }}</a>
             </span>
           </div>
           <div class="time">
-            <a href="javascript:;" v-on:click="delFile(currentPath,file.name)" style="margin-right: 8px">删除</a>
-            <a href="javascript:;" v-on:click="rename(currentPath,file.name)">重命名</a>
+            <span>
+                <a href="javascript:;" v-on:click="delFile(file.path,file.fileName)" style="margin-right: 8px">删除</a>
+                <a href="javascript:;" v-on:click="rename(file.path,file.fileName)">重命名</a>
+            </span>
           </div>
         </div>
-
-
       </div>
     </div>
   </div>
@@ -78,84 +43,37 @@
 
 <script>
 export default {
+  name: "Search",
   data() {
     return {
-      isRoot: false,
-      directories: [],
-      files: [],
-      prevUrl: [],
-      currentPath: [],
-      path: [],
-      searchText:"",
-    };
+      searchText: "",
+      files: []
+    }
   },
   mounted: function () {
     this.$nextTick(function () {
-      console.log("start");
-      let that = this;
-      let p = this.path.join("/");
-      this.request.fetch("/api/disk/myFolder", {path: p}).then(function (data) {
-        that.isRoot = data.isRoot;
-        that.directories = data.directories;
-        that.files = data.files;
-        that.prevUrl = data.prevUrl;
-        that.currentPath = data.currentPath;
-      });
+      this.searchText = this.$route.query.key;
+      this.reload();
     })
   },
-  name: "NetworkDisk",
   methods: {
-    reloadDir: function () {
-      let p = this.path.join("/");
+    reload: function () {
       let that = this;
-      this.request.fetch("/api/disk/myFolder", {path: p}).then(function (data) {
-        that.isRoot = data.isRoot;
-        that.directories = data.directories;
-        that.files = data.files;
-        that.prevUrl = data.prevUrl;
-        that.currentPath = data.currentPath;
+      this.request.fetch("/api/disk/search", {key: this.searchText}).then(x => {
+        that.files = x;
       });
     },
-    openDir: function (name) {
-      this.path.push(name);
-      this.reloadDir();
+    goBack() {
+      window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
     },
-    goToPrev: function (prev) {
-      let that = this;
-      this.request.fetch("/api/disk/myFolder", {path: prev.join("/")}).then(function (data) {
-        that.isRoot = data.isRoot;
-        that.directories = data.directories;
-        that.files = data.files;
-        that.prevUrl = data.prevUrl;
-        that.currentPath = data.currentPath;
-        that.path = prev;
-      });
-    },
-    createDir: function () {
-      let that = this;
-      this.layer.prompt({
-        title: "请输入文件夹名称", formType: 1
-      }, function (pass, index) {
-        let loadIndex = that.layer.loading();
-        that.request.post("/api/disk/create",
-            {
-              path: that.path.join("/"),
-              name: pass
-            })
-            .then(() => {
-              that.reloadDir();
-              that.layer.close(index);
-              that.layer.close(loadIndex);
-            });
-      });
-    },
-    search:function(){
-      this.$router.push({path:"search",query:{key:this.searchText}});
+    search: function () {
+      this.$router.push({path: "search", query: {key: this.searchText}});
+      this.reload();
     },
     delFile: function (path, name) {
       let that = this;
       this.request.post("/api/disk/file", {path: path.join("/"), name: name}).then(() => {
-        that.reloadDir();
+        that.reload();
       });
     },
     rename: function (path, fileName) {
@@ -171,43 +89,11 @@ export default {
               newFileName: pass
             })
             .then(() => {
-              that.reloadDir();
+              that.reload();
               that.layer.close(index);
               that.layer.close(loadIndex);
             });
       });
-    },
-    delDir:function(name){
-      let that = this;      
-      let p = this.currentPath;
-      p.push(name);
-      console.log(p);
-      this.request.post("/api/disk/dir", {path: p.join("/")}).then(() => {
-        that.reloadDir();
-      });
-    },
-    renameDir:function(name){
-      let that = this;
-      let p = this.currentPath;
-      p.push(name);
-      this.layer.prompt({
-        title: "请输入新名称", formType: 1
-      }, function (pass, index) {
-        let loadIndex = that.layer.loading();
-        that.request.post("/api/disk/RenameFolder",
-            {
-              path: p.join("/"),
-              NewName: pass
-            })
-            .then(() => {
-              that.reloadDir();
-              that.layer.close(index);
-              that.layer.close(loadIndex);
-            });
-      });
-    },
-    upload:function(){
-      
     }
   }
 }

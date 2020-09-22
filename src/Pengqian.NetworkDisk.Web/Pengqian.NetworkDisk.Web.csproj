@@ -36,5 +36,13 @@
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\css\app.e814575d.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\app.d194e8e9.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\app.d194e8e9.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\chunk-vendors.66c089d9.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\chunk-vendors.66c089d9.js.map" />
+    </ItemGroup>
+
 
 </Project>
