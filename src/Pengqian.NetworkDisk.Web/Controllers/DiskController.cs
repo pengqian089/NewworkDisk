@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Pengqian.NetworkDisk.Public.ViewModel;
@@ -164,6 +167,46 @@ namespace Pengqian.NetworkDisk.Web.Controllers
             var service = new NetworkDiskFileService(_networkDiskRootPath);
             await service.RenameFolder(virtualPath, userInfo, model.NewName);
             return Ok();
+        }
+
+        [HttpPost, Route("api/[controller]/upload")]
+        public async Task<IActionResult> Upload([FromForm] UploadModel model)
+        {
+            if (model?.File == null) return BadRequest("Invalid Request");
+            var userInfo = User.GetUserInfo();
+
+            await using var stream = new MemoryStream();
+            await model.File.CopyToAsync(stream);
+            using var md5 = MD5.Create();
+            var md5Value = BitConverter.ToString(md5.ComputeHash(stream.ToArray())).Replace("-", "").ToLower();
+            var viewModel = new VmNetworkDiskFile
+            {
+                FileName = model.File.FileName,
+                FileSize = stream.Length,
+                Md5 = md5Value,
+                Owner = userInfo,
+                Path = string.IsNullOrEmpty(model.Path) ? new string[0] : model.Path.Split("/"),
+                UploadTime = DateTime.Now
+            };
+
+
+            var service = new NetworkDiskFileService(_networkDiskRootPath);
+            stream.Position = 0;
+            await service.Upload(viewModel, stream);
+            return Ok();
+        }
+
+        [HttpGet, Route("/network-disk/download"), AllowAnonymous]
+        public IActionResult DownloadFile(string path = "", string account = "")
+        {
+
+            var absolutePath = Path.Combine(Path.Combine(_networkDiskRootPath, account),
+                Path.Combine(string.IsNullOrEmpty(path) ? new string[0] : path.Split("/")));
+            
+            if (!System.IO.File.Exists(absolutePath)) return NotFound();
+            var stream = new FileStream(absolutePath, FileMode.Open);
+            var fileName = absolutePath.Substring(absolutePath.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+            return File(stream, "application/octet-stream",fileName);
         }
     }
 

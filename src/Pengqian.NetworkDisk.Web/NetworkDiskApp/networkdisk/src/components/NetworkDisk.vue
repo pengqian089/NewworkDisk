@@ -5,8 +5,8 @@
         <div class="details-container">
           <div class="desc">
             <a href="javascript:;" style="margin-right: 10px" v-on:click="createDir">新建文件夹</a>
-            <a href="javascript:;" style="margin-right: 10px" v-on:click="upload">上传文件</a>
-            <input type="text" id="txtSearch" v-model="searchText" /> <a href="javascript:;" v-on:click="search">搜索</a>
+            <input id="file" type="file" @change="upload" style="margin-right: 10px">
+            <input type="text" id="txtSearch" v-model="searchText"/> <a href="javascript:;" v-on:click="search">搜索</a>
           </div>
           <div class="desc">
             {{ currentPath.join("/") }}
@@ -65,6 +65,8 @@
             </span>
           </div>
           <div class="time">
+            <a :href="'/network-disk/download?path=' + (currentPath.length === 0 ? '' : currentPath.join('/') + '/') + file.name + '&account=' + $store.getters.getAccount" target="_blank"
+               style="margin-right: 8px">下载</a>
             <a href="javascript:;" v-on:click="delFile(currentPath,file.name)" style="margin-right: 8px">删除</a>
             <a href="javascript:;" v-on:click="rename(currentPath,file.name)">重命名</a>
           </div>
@@ -86,7 +88,7 @@ export default {
       prevUrl: [],
       currentPath: [],
       path: [],
-      searchText:"",
+      searchText: "",
     };
   },
   mounted: function () {
@@ -149,8 +151,8 @@ export default {
             });
       });
     },
-    search:function(){
-      this.$router.push({path:"search",query:{key:this.searchText}});
+    search: function () {
+      this.$router.push({path: "search", query: {key: this.searchText}});
     },
     delFile: function (path, name) {
       let that = this;
@@ -177,8 +179,8 @@ export default {
             });
       });
     },
-    delDir:function(name){
-      let that = this;      
+    delDir: function (name) {
+      let that = this;
       let p = this.currentPath;
       p.push(name);
       console.log(p);
@@ -186,7 +188,7 @@ export default {
         that.reloadDir();
       });
     },
-    renameDir:function(name){
+    renameDir: function (name) {
       let that = this;
       let p = this.currentPath;
       p.push(name);
@@ -206,8 +208,23 @@ export default {
             });
       });
     },
-    upload:function(){
-      
+    upload: function (event) {
+      let that = this;
+      let file = event.target.files[0];
+      let param = new FormData();
+      param.append('file', file);
+      param.append("path", this.currentPath.join("/"));
+      console.log(param.get('file'));
+      let config = {
+        headers: {'Content-Type': 'multipart/form-data'}
+      };
+      let index = this.layer.loading();
+      this.$axios.post('/api/disk/upload', param, config)
+          .then(() => {
+            that.reloadDir();
+            that.layer.close(index);
+          })
+
     }
   }
 }

@@ -31,6 +31,8 @@
           </div>
           <div class="time">
             <span>
+              <a :href="'/network-disk/download?path=' + (file.path.length === 0 ? '' : file.path.join('/') + '/') + file.fileName + '&account=' + $store.getters.getAccount" target="_blank"
+                 style="margin-right: 8px">下载</a>
                 <a href="javascript:;" v-on:click="delFile(file.path,file.fileName)" style="margin-right: 8px">删除</a>
                 <a href="javascript:;" v-on:click="rename(file.path,file.fileName)">重命名</a>
             </span>

@@ -15,7 +15,10 @@ const store = new Vuex.Store({
     getters :{        
         getToken(state){
             return state.userInfo.token;
-        },      
+        },
+        getAccount(){
+          return localStorage.account;  
+        },
         isLogin() {
             let tokenExpire = Date.parse(new Date(store.state.userInfo.expire  || localStorage.tokenExpire));
             let nowTime = Date.parse(new Date());
